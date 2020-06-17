@@ -302,7 +302,7 @@ tcp_mux = true
 protocol = tcp
 user = {$tk}
 token = {$ns['token']}
-dns_server = 114.114.114.114
+dns_server = 223.6.6.6
 
 
 EOF;
