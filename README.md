@@ -20,6 +20,8 @@ __在线预览:__ https://sakuracloud.cn/
 用户名：`Akkariin` 密码：`12345678`
 
 ## 安装和配置
+推荐使用PHP7.0搭配MySQL5.7 
+
 首先将项目 clone 到本地
 ```
 git clone https://github.com/ZeroDream-CN/SakuraPanel/
