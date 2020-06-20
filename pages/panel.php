@@ -17,11 +17,11 @@ $rs = Database::querySingleLine("users", Array("username" => $_SESSION['user']))
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<title>管理面板 :: <?php echo $_config[ 'sitename']; ?> - <?php echo $_config[ 'description']; ?></title>
 		<!-- Font Awesome Icons -->
-		<link rel="stylesheet" href="assets/panel/plugins/fontawesome-free/css/all.min.css">
+		<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.10.2/css/all.css" rel="stylesheet">
 		<!-- IonIcons -->
-		<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+		<link href="https://cdn.bootcdn.net/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 		<!-- Theme style -->
-		<link rel="stylesheet" href="assets/panel/dist/css/adminlte.min.css">
+		<link href="https://cdn.staticfile.org/admin-lte/3.0.0-rc.1/css/adminlte.css" rel="stylesheet">
 		<!-- Google Font: Source Sans Pro -->
 		<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"></head>
 	
@@ -179,11 +179,11 @@ $rs = Database::querySingleLine("users", Array("username" => $_SESSION['user']))
 		<!-- ./wrapper -->
 		<!-- REQUIRED SCRIPTS -->
 		<!-- jQuery -->
-		<script src="assets/panel/plugins/jquery/jquery.min.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<!-- Bootstrap -->
-		<script src="assets/panel/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 		<!-- AdminLTE -->
-		<script src="assets/panel/dist/js/adminlte.js"></script>
+		<script src="https://cdn.staticfile.org/admin-lte/3.0.0-rc.1/js/adminlte.js"></script>
 	</body>
 
 </html>
