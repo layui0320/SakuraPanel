@@ -41,7 +41,7 @@ chown -R www:www /data/wwwroot/my.panel.com/
 
 配置完成后，使用 Navicat、phpMyAdmin 等数据库管理软件创建一个数据库，然后导入 `import.sql`。
 
-数据库编码类型：utf8mb4，utf8mb4_unicode_ci
+数据库编码类型：utf8mb4 / utf8mb4_unicode_ci；数据库引擎：InnoDB
 
 导入完成后，打开网站，注册一个新账号，然后在数据库中设置这个账号的 __group__ 字段为 `admin` 即可设置为管理员。
 
@@ -53,12 +53,11 @@ chown -R www:www /data/wwwroot/my.panel.com/
 Frpc 客户端无特殊需求，只要版本是 0.28.0 都可以兼容使用。
 
 ## 许可协议
-本软件仅限个人非盈利使用，不可用于商业行为。完整许可协议请查看 LICENSE 文件。
+本软件仅限个人非盈利使用，完整许可协议请查看 LICENSE 文件。
 
-如需用于商业使用，请联系作者购买商业授权，商业用户可享有更多功能和特性以及售后支持。
+如需用于商业行为（例如出租内网穿透），或者需要技术支持，请与我 [联系](https://github.com/ZeroDream-CN/SakuraPanel/issues/21)。
 
 ## 交流
 
-- 官方 QQ 群：614039603
 - 官方 Telegram 群：https://t.me/natfrp
 - 作者 QQ：204034

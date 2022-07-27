@@ -28,7 +28,22 @@ $nm = new NodeManager();
 
 // 服务端 API 部分
 // 先进行 Frps 鉴权
-if((isset($_GET['apitoken']) && $_GET['apitoken'] == API_TOKEN) || (isset($_GET['action']) && $_GET['action'] == "getconf")) {
+if(isset($_GET['apitoken']) || (isset($_GET['action']) && $_GET['action'] == "getconf")) {
+	
+	if(isset($_GET['apitoken'])) {
+		// 取得节点 ID
+		$expToken = explode("|", $_GET['apitoken']);
+		if(count($expToken) !== 2 || !preg_match("/^[0-9]{1,5}$/", $expToken[1])) {
+			Utils::sendServerForbidden("Invalid Node ID");
+		} elseif($expToken[0] !== API_TOKEN) {
+			Utils::sendServerForbidden("Invalid API Token");
+		}
+		$switchNode = Intval($expToken[1]);
+		if(!$nm->isNodeAvailable($switchNode)) {
+			Utils::sendServerForbidden("This server is current not available");
+		}
+	}
+	
 	switch($_GET['action']) {
 		case "getconf":
 			// 精简了一下，用户名可以不用了
@@ -63,6 +78,10 @@ if((isset($_GET['apitoken']) && $_GET['apitoken'] == API_TOKEN) || (isset($_GET[
 					$userToken = Database::escape($_GET['user']);
 					$rs = Database::querySingleLine("tokens", ["token" => $userToken]);
 					if($rs) {
+						$userName = Database::escape($rs['username']);
+						if(!$nm->isUserHasPermission($userName, $switchNode)) {
+							Utils::sendServerForbidden("You have no permission to connect this server");
+						}
 						Utils::sendLoginSuccessful("Login successful, welcome!");
 					} else {
 						Utils::sendServerForbidden("Login failed");
@@ -82,17 +101,40 @@ if((isset($_GET['apitoken']) && $_GET['apitoken'] == API_TOKEN) || (isset($_GET[
 					$proxyName  = str_replace("{$_GET['user']}.", "", $_GET['proxy_name']);
 					$proxyType  = $_GET['proxy_type'] ?? "tcp";
 					$remotePort = Intval($_GET['remote_port']) ?? "";
+					$sk         = Database::escape($_GET['sk'] ?? "");
 					$userToken  = Database::escape($_GET['user']);
 					$rs         = Database::querySingleLine("tokens", ["token" => $userToken]);
 					if($rs) {
-						if($proxyType == "tcp" || $proxyType == "udp" || $proxyType == "stcp" || $proxyType == "xtcp") {
+						if($proxyType == "tcp" || $proxyType == "udp") {
 							if(isset($remotePort) && Regex::isNumber($remotePort)) {
 								$username = Database::escape($rs['username']);
 								// 这里只对远程端口做限制，可根据自己的需要修改
 								$rs = Database::querySingleLine("proxies", [
 									"username"    => $username,
 									"remote_port" => $remotePort,
-									"proxy_type"  => $proxyType
+									"proxy_type"  => $proxyType,
+									"node"        => $switchNode
+								]);
+								if($rs) {
+									if($rs['status'] !== "0") {
+										Utils::sendServerForbidden("Proxy disabled");
+									}
+									Utils::sendCheckSuccessful("Proxy exist");
+								} else {
+									Utils::sendServerNotFound("Proxy not found");
+								}
+							} else {
+								Utils::sendServerBadRequest("Invalid request");
+							}
+						} elseif($proxyType == "stcp" || $proxyType == "xtcp") {
+							if(isset($sk) && !empty($sk)) {
+								$username = Database::escape($rs['username']);
+								// 这里只对 SK 做限制，可根据自己的需要修改
+								$rs = Database::querySingleLine("proxies", [
+									"username"    => $username,
+									"sk"          => $sk,
+									"proxy_type"  => $proxyType,
+									"node"        => $switchNode
 								]);
 								if($rs) {
 									if($rs['status'] !== "0") {
@@ -116,7 +158,8 @@ if((isset($_GET['apitoken']) && $_GET['apitoken'] == API_TOKEN) || (isset($_GET[
 								$domainSQL = (isset($_GET['domain']) && !empty($_GET['domain'])) ? ["domain" => $domain] : ["subdomain" => $subdomain];
 								$querySQL  = [
 									"username"   => $username,
-									"proxy_type" => $proxyType
+									"proxy_type" => $proxyType,
+									"node"       => $switchNode
 								];
 								$querySQL  = Array_merge($querySQL, $domainSQL);
 								$rs        = Database::querySingleLine("proxies", $querySQL);
